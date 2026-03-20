@@ -127,3 +127,17 @@
     @apply font-sans;
   }
 }
+
+@media print {
+  /* 인쇄 시 여백 제거, 전체 너비 사용 */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 페이지 중간에서 견적 항목이 잘리지 않도록 처리 */
+  tr,
+  .invoice-item {
+    break-inside: avoid;
+  }
+}

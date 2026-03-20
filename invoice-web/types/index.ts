@@ -1,4 +1,1 @@
-// 전역 공통 타입 정의
-// 프로젝트에 필요한 타입을 이 파일에 추가하세요
-
-export type {};
+export type { Invoice, InvoiceItem, InvoiceStatus } from './invoice';
