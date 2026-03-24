@@ -10,12 +10,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 개요
 
-Next.js 15.5.3 + React 19 + Tailwind CSS v4 + shadcn/ui + @notionhq/client 기반. 패키지 매니저로 **pnpm**을 사용한다.
+Next.js 16.1.7 + React 19 + Tailwind CSS v4 + shadcn/ui + @notionhq/client 기반. 패키지 매니저로 **pnpm**을 사용한다.
 
 ## 핵심 기술 스택
 
-- **Framework**: Next.js 15.5.3 (App Router + Turbopack)
-- **Runtime**: React 19.1.0 + TypeScript 5
+- **Framework**: Next.js 16.1.7 (App Router + Turbopack)
+- **Runtime**: React 19.2.3 + TypeScript 5
 - **Styling**: TailwindCSS v4 + shadcn/ui (new-york style)
 - **UI Components**: Radix UI + Lucide Icons
 - **External API**: @notionhq/client (Notion 공식 SDK)
