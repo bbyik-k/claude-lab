@@ -133,10 +133,12 @@ types/
 
 ---
 
-## 9. 현재 알려진 버그 (Task 006 대상)
+## 9. @notionhq/client v5 API 주의사항
 
-- `lib/notion.ts` 70번째 줄: `notion.dataSources.query` → `notion.databases.query` 로 교체 필요
-- Task 006 수행 시 반드시 이 부분 수정
+- **`@notionhq/client` 버전 5.x 사용** — v2.x의 `notion.databases.query` API 제거됨
+- **DB 쿼리 메서드**: `notion.dataSources.query({ data_source_id: DATABASE_ID, filter: ... })` 사용
+- **파라미터명**: `data_source_id` (v2의 `database_id` 아님)
+- `package.json`에 `"@notionhq/client": "^5.14.0"` 등록됨
 
 ---
 

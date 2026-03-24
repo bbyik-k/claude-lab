@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getInvoiceByToken } from '@/lib/notion';
 import { InvoiceView } from '@/features/invoice/components/invoice-view';
 import type { Invoice } from '@/types/invoice';
@@ -43,7 +43,14 @@ export default async function InvoicePage({ params }: Props) {
     return <InvoiceView invoice={MOCK_INVOICE} />;
   }
 
-  const invoice = await getInvoiceByToken(token);
+  let invoice: Invoice | null = null;
+
+  try {
+    invoice = await getInvoiceByToken(token);
+  } catch {
+    // Notion API 호출 실패 시 서버 오류 페이지로 리다이렉트
+    redirect('/invoice/error?reason=server-error');
+  }
 
   // 토큰에 해당하는 견적서가 없으면 404
   if (!invoice) notFound();
@@ -53,13 +60,7 @@ export default async function InvoicePage({ params }: Props) {
     invoice.status === 'expired' || new Date() > new Date(invoice.expiresAt);
 
   if (isExpired) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-muted-foreground">
-          만료된 견적서입니다. 담당자에게 문의해 주세요.
-        </p>
-      </div>
-    );
+    redirect('/invoice/error?reason=expired');
   }
 
   return <InvoiceView invoice={invoice} />;
