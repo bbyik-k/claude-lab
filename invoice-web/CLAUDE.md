@@ -1,43 +1,36 @@
-# CLAUDE.md
+# 🤖 Claude Code 개발 지침
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-## Claude Code 개발 지침
-
-**노션 견적서 웹 뷰어**는 노션 DB에 입력한 견적서를 클라이언트가 공유 링크로 조회하고 PDF로 저장할 수 있는 MVP 프로젝트입니다.
+**노션 기반 견적서 관리 시스템 MVP** - 노션을 데이터베이스로 활용하여 견적서를 관리하고, 클라이언트가 웹에서 조회 및 PDF 다운로드할 수 있는 시스템
 
 📋 상세 프로젝트 요구사항은 @/docs/PRD.md 참조
 
-## 개요
-
-Next.js 16.1.7 + React 19 + Tailwind CSS v4 + shadcn/ui + @notionhq/client 기반. 패키지 매니저로 **pnpm**을 사용한다.
-
-## 핵심 기술 스택
+## 🛠️ 핵심 기술 스택
 
 - **Framework**: Next.js 16.1.7 (App Router + Turbopack)
 - **Runtime**: React 19.2.3 + TypeScript 5
 - **Styling**: TailwindCSS v4 + shadcn/ui (new-york style)
+- **Forms**: React Hook Form + Zod + Server Actions
 - **UI Components**: Radix UI + Lucide Icons
-- **External API**: @notionhq/client (Notion 공식 SDK)
-- **Development**: ESLint
+- **External API**: @notionhq/client (Notion API SDK)
+- **Development**: ESLint + Prettier + Husky + lint-staged
 
-## 개발 가이드
+## 📚 개발 가이드
 
-- **개발 로드맵**: `@/docs/ROADMAP.md`
-- **프로젝트 요구사항**: `@/docs/PRD.md`
-- **프로젝트 구조**: `@/docs/guides/project-structure.md`
-- **스타일링 가이드**: `@/docs/guides/styling-guide.md`
-- **컴포넌트 패턴**: `@/docs/guides/component-patterns.md`
-- **Next.js 15.5.3 전문 가이드**: `@/docs/guides/nextjs-15.md`
-- **폼 처리 완전 가이드**: `@/docs/guides/forms-react-hook-form.md`
+- **📋 프로젝트 요구사항 (PRD)**: `@/docs/PRD.md` - 견적서 시스템 상세 명세
+- **📁 프로젝트 구조**: `@/docs/guides/project-structure.md`
+- **🎨 스타일링 가이드**: `@/docs/guides/styling-guide.md`
+- **🧩 컴포넌트 패턴**: `@/docs/guides/component-patterns.md`
+- **⚡ Next.js 16.1.7 전문 가이드**: `@/docs/guides/nextjs-15.md`
+- **📝 폼 처리 완전 가이드**: `@/docs/guides/forms-react-hook-form.md`
 
-## 주요 명령어
+## ⚡ 자주 사용하는 명령어
 
 ```bash
 pnpm dev       # 개발 서버 실행 (localhost:3000)
 pnpm build     # 프로덕션 빌드
 pnpm start     # 프로덕션 서버 실행
 pnpm lint      # ESLint 실행
+npm run check-all   # 모든 검사 통합 실행 (권장)
 
 # UI 컴포넌트
 npx shadcn@latest add button    # 새 컴포넌트 추가
@@ -81,7 +74,8 @@ types/
 ## shadcn/ui 컴포넌트 추가
 
 ```bash
-pnpm dlx shadcn@latest add [component-name]
+pnpm run check-all   # 모든 검사 통과 확인
+pnpm run build       # 빌드 성공 확인
 ```
 
-컴포넌트는 `components/ui/`에 추가된다.
+💡 **상세 규칙은 위 개발 가이드 문서들을 참조하세요**
