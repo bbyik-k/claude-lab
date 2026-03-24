@@ -14,8 +14,8 @@ const MOCK_INVOICE: Invoice = {
   title: '웹 서비스 개발 견적서',
   invoiceNumber: 'INV-2026-001',
   status: 'sent',
-  issuedAt: new Date('2026-03-01'),
-  expiresAt: new Date('2026-04-30'),
+  issuedAt: '2026-03-01',
+  expiresAt: '2026-04-30',
   clientName: '(주)클라이언트',
   contactName: '홍길동',
   contactPhone: '010-1234-5678',
@@ -50,7 +50,7 @@ export default async function InvoicePage({ params }: Props) {
 
   // 만료 체크: 상태가 'expired'이거나 만료일이 지난 경우 오류 페이지로 리다이렉트 (F005)
   const isExpired =
-    invoice.status === 'expired' || new Date() > invoice.expiresAt;
+    invoice.status === 'expired' || new Date() > new Date(invoice.expiresAt);
 
   if (isExpired) {
     return (
