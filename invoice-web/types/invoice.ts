@@ -1,7 +1,7 @@
 /** 견적서 상태 */
 export type InvoiceStatus = 'draft' | 'sent' | 'approved' | 'expired';
 
-/** 견적 항목 - Notion 테이블 블록 행 매핑 */
+/** 견적 항목 - Notion Items DB 레코드 매핑 */
 export interface InvoiceItem {
   name: string;
   quantity: number;
@@ -16,12 +16,14 @@ export interface Invoice {
   title: string;
   invoiceNumber: string;
   status: InvoiceStatus;
-  issuedAt: Date;
-  expiresAt: Date;
+  /** ISO 날짜 문자열 (unstable_cache JSON 직렬화 대응) */
+  issuedAt: string;
+  expiresAt: string;
   clientName: string;
-  contactName: string;
-  contactPhone: string;
-  contactEmail: string;
+  /** DB에 없는 필드 - optional */
+  contactName?: string;
+  contactPhone?: string;
+  contactEmail?: string;
   subtotal: number;
   vat: number;
   total: number;
