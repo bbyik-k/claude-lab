@@ -30,7 +30,7 @@ pnpm dev       # 개발 서버 실행 (localhost:3000)
 pnpm build     # 프로덕션 빌드
 pnpm start     # 프로덕션 서버 실행
 pnpm lint      # ESLint 실행
-npm run check-all   # 모든 검사 통합 실행 (권장)
+pnpm run check-all   # 모든 검사 통합 실행 (권장)
 
 # UI 컴포넌트
 npx shadcn@latest add button    # 새 컴포넌트 추가
@@ -71,7 +71,7 @@ types/
 
 **데이터 페칭**: `lib/notion.ts`의 `getInvoiceByToken()` 사용. `unstable_cache`로 5분 캐싱 적용.
 
-## shadcn/ui 컴포넌트 추가
+## ✅ 작업 완료 체크리스트
 
 ```bash
 pnpm run check-all   # 모든 검사 통과 확인
