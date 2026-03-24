@@ -41,3 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 **/.DS_Store
+
+# playwright mcp logs
+.playwright-mcp/
+
+# shrimp task manager data
+shrimp_data/
