@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Invoice Web',
-  description: 'Invoice Web',
+  title: '견적서 뷰어',
+  description: 'Notion 기반 견적서 공유 서비스',
 };
 
 export default function RootLayout({

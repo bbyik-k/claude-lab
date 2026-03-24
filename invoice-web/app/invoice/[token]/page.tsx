@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { getInvoiceByToken } from '@/lib/notion';
 import { InvoiceView } from '@/features/invoice/components/invoice-view';
@@ -5,6 +6,41 @@ import type { Invoice } from '@/types/invoice';
 
 interface Props {
   params: Promise<{ token: string }>;
+}
+
+/**
+ * 견적서 페이지 동적 메타데이터 생성
+ * - mock 토큰: 미리보기 제목 반환
+ * - 견적서 조회 성공: 견적서 제목으로 OpenGraph 포함 설정
+ * - 견적서 없음 / 오류: 기본 제목 반환
+ */
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { token } = await params;
+
+  // 개발용 mock 토큰
+  if (token === 'mock') {
+    return { title: '견적서 미리보기 | 견적서 뷰어' };
+  }
+
+  try {
+    const invoice = await getInvoiceByToken(token);
+
+    // 토큰에 해당하는 견적서가 없는 경우
+    if (!invoice) {
+      return { title: '견적서 | 견적서 뷰어' };
+    }
+
+    // 정상 조회 시 견적서 제목으로 메타데이터 설정
+    return {
+      title: `${invoice.title} | 견적서 뷰어`,
+      openGraph: {
+        title: `${invoice.title} | 견적서 뷰어`,
+      },
+    };
+  } catch {
+    // Notion API 오류 등 예외 상황 시 기본 제목 반환
+    return { title: '견적서 | 견적서 뷰어' };
+  }
 }
 
 /** 개발용 mock 데이터 - /invoice/mock 으로 접속하여 UI 확인 */
