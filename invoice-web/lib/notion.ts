@@ -3,10 +3,57 @@ import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoint
 import { unstable_cache } from 'next/cache';
 import type { Invoice, InvoiceItem, InvoiceStatus } from '@/types/invoice';
 
+/**
+ * 필수 환경변수 존재 여부를 검증한다.
+ * NOTION_API_KEY 또는 NOTION_DATABASE_ID가 없으면 에러를 throw한다.
+ */
+function validateEnv(): void {
+  const missing: string[] = [];
+
+  if (!process.env.NOTION_API_KEY) missing.push('NOTION_API_KEY');
+  if (!process.env.NOTION_DATABASE_ID) missing.push('NOTION_DATABASE_ID');
+
+  if (missing.length > 0) {
+    console.error(`[notion] 필수 환경변수 누락: ${missing.join(', ')}`);
+    throw new Error(`필수 환경변수가 설정되지 않았습니다: ${missing.join(', ')}`);
+  }
+}
+
+// 테스트 환경이 아닐 때 모듈 로드 시점에 즉시 환경변수 검증 실행
+if (process.env.NODE_ENV !== 'test') validateEnv();
+
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
 /** Invoices DB ID (환경변수) */
 const DATABASE_ID = process.env.NOTION_DATABASE_ID!;
+
+/**
+ * 비동기 함수를 최대 maxRetries 횟수만큼 재시도하는 헬퍼
+ * 실패 시 지수 백오프(500ms * (attempt + 1))를 적용한다.
+ *
+ * @param fn - 실행할 비동기 함수
+ * @param maxRetries - 최대 재시도 횟수 (기본값: 2)
+ */
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 2): Promise<T> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastError = err;
+
+      // 마지막 시도에서는 대기 없이 즉시 throw
+      if (attempt === maxRetries) break;
+
+      // 지수 백오프: 500ms, 1000ms, ...
+      const delayMs = 500 * (attempt + 1);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+
+  throw lastError;
+}
 
 /** Notion 속성 값 접근용 타입 (동적 속성 파싱) */
 type NotionPropValue = Record<string, unknown>;
@@ -132,13 +179,16 @@ async function parseInvoiceItems(page: PageObjectResponse): Promise<InvoiceItem[
  */
 export const getInvoiceByToken = unstable_cache(
   async (token: string): Promise<Invoice | null> => {
-    const response = await notion.databases.query({
-      database_id: DATABASE_ID,
-      filter: {
-        property: '공유토큰',
-        rich_text: { equals: token },
-      },
-    });
+    // Notion API 호출 실패 시 최대 2회 재시도 (지수 백오프 적용)
+    const response = await withRetry(() =>
+      notion.databases.query({
+        database_id: DATABASE_ID,
+        filter: {
+          property: '공유토큰',
+          rich_text: { equals: token },
+        },
+      })
+    );
 
     if (response.results.length === 0) return null;
 
