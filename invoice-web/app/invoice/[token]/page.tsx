@@ -4,6 +4,9 @@ import { getInvoiceByToken } from '@/lib/notion';
 import { InvoiceView } from '@/features/invoice/components/invoice-view';
 import type { Invoice } from '@/types/invoice';
 
+/** 토큰 기본 유효성 검사 정규식 (1~100자, 영문/숫자/하이픈/언더스코어) */
+const TOKEN_PATTERN = /^[a-zA-Z0-9_-]{1,100}$/;
+
 interface Props {
   params: Promise<{ token: string }>;
 }
@@ -16,6 +19,11 @@ interface Props {
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { token } = await params;
+
+  // 유효하지 않은 토큰 형식은 기본 제목 반환
+  if (token !== 'mock' && !TOKEN_PATTERN.test(token)) {
+    return { title: '견적서 | 견적서 뷰어' };
+  }
 
   // 개발용 mock 토큰
   if (token === 'mock') {
@@ -73,6 +81,11 @@ const MOCK_INVOICE: Invoice = {
  */
 export default async function InvoicePage({ params }: Props) {
   const { token } = await params;
+
+  // 기본 형식 검증 (보안: 비정상적으로 긴 문자열 등 차단)
+  if (token !== 'mock' && !TOKEN_PATTERN.test(token)) {
+    notFound();
+  }
 
   // 개발용 mock 토큰 처리
   if (token === 'mock') {
